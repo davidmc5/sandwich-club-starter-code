@@ -4,16 +4,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.udacity.sandwichclub.model.Sandwich;
 import com.udacity.sandwichclub.utils.JsonUtils;
 
+import java.util.List;
+
 public class DetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_POSITION = "extra_position";
     private static final int DEFAULT_POSITION = -1;
+
+    private TextView mOrigin_tv;
+    private TextView mDescription_tv;
+    private TextView mAlsoKnownAs_tv;
+    private TextView mIngredients_tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +51,10 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
-        populateUI();
+        populateUI(sandwich);
         Picasso.with(this)
                 .load(sandwich.getImage())
                 .into(ingredientsIv);
-
         setTitle(sandwich.getMainName());
     }
 
@@ -56,7 +63,22 @@ public class DetailActivity extends AppCompatActivity {
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
 
-    private void populateUI() {
+    private void populateUI(Sandwich sandwich) {
 
+        mOrigin_tv = findViewById(R.id.origin_tv);
+        mOrigin_tv.setText(sandwich.getPlaceOfOrigin());
+
+        mDescription_tv = findViewById(R.id.description_tv);
+        mDescription_tv.setText(sandwich.getDescription());
+
+        mAlsoKnownAs_tv = findViewById(R.id.also_known_tv);
+        List<String> aka = sandwich.getAlsoKnownAs();
+        String akaString = String.join(", ", aka);
+        mAlsoKnownAs_tv.setText(akaString);
+
+        mIngredients_tv = findViewById(R.id.ingredients_tv);
+        List<String> ing = sandwich.getIngredients();
+        String ingString = String.join(", ", ing);
+        mIngredients_tv.setText(ingString);
     }
 }
